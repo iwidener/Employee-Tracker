@@ -14,8 +14,8 @@ const EXIT = "exit";
 const Financial_Management = "Financial Management";
 const Financial_Analysts = "Financial Analysts";
 const Accounting_Department = "Accounting Department";
-const Sales_Department = "Sales";
-const departments = [Financial_Management, Financial_Analysts, Accounting_Department, Sales_Department];
+const Investment_Department = "Investment";
+const departments = [Financial_Management, Financial_Analysts, Accounting_Department, Investment_Department];
 
 start();
 
@@ -75,12 +75,13 @@ async function start() {
 
     async function employeesSearch() {
         const employees = await db.findAllEmployees();
-        employees.forEach(employee => console.log(`ID: ${employee.id} | First Name: ${employee.first_name} | Last Name: ${employee.last_name} | Title:${employee.title} | Department: ${employee.department_id} | Salary: ${employee.salary} | Manager: ${employee.manager_id}`));
-    }
+        employees.forEach(employee => console.log(`ID: ${employee.id} | First Name: ${employee.first_name} | Last Name: ${employee.last_name} | Title:${employee.title} | Department: ${employee.department} | Salary: ${employee.salary} | Manager: ${employee.manager}`));
+        start();
+    };
 
 
     function employeesDepartment() {
-        inquirer
+        return inquirer
             .prompt(
                 {
                     name: "departments",
@@ -90,32 +91,40 @@ async function start() {
                         Financial_Management,
                         Financial_Analysts,
                         Accounting_Department,
-                        Sales_Department
+                        Investment_Department
                     ]
                 }
             )
             .then(function (answer) {
                 switch (answer.departments) {
                     case Financial_Management:
-                        return findFinancialManagement();
+                        return findEmployeesDepartment(1);
                         break;
                     case Financial_Analysts:
-                        findFiancialAnalysts();;
+                        return findEmployeesDepartment(2);
                         break;
                     case Accounting_Department:
-                        findAccounting();
+                        return findEmployeesDepartment(3);
                         break;
-                    case Sales_Department:
-                        findSales();
+                    case Investment_Department:
+                        return findEmployeesDepartment(4);
                         break;
                 }
+            }).then (function (employees) {
+               
+            })
 
-            });
-    }
+    };
 
-    async function findEmployeesDepartment() {
-        departments.forEach(employee => console.log(`ID: ${employee.id} | First Name: ${employee.first_name} | Last Name: ${employee.last_name} | Title:${department.title} | Department: ${department_id}`));
-        const departments = await db.findEmployeesDepartment();
+    // async function findFinancialManagement() {
+    //     const query = ``
+    // };
+
+    async function findEmployeesDepartment(department_id) {
+        // departments.forEach(employee => console.log(`ID: ${employee.id} | First Name: ${employee.first_name} | Last Name: ${employee.last_name} | Title:${department.title} | Department: ${department_id}`));
+        const employees = await db.findEmployeesDepartment(department_id);
+        employees.forEach(employee => console.log(`ID: ${employee.id} | First Name: ${employee.first_name} | Last Name: ${employee.last_name} | Title:${employee.title} | Department: ${employee.department}`));
+        start();
     };
 
     async function updateEmployeeRole(info) {
@@ -124,10 +133,11 @@ async function start() {
         const args = [role, employee.id[0], employee.id[1]];
         await connection.query(query, args);
         console.log(`updated ${employee.id[0]} ${employee.id[1]} with a new role ${info.role}`)
+        start();
     };
 
    async function employeeAdd() {
-        inquirer
+        return inquirer
             .prompt(
                 {
                     name: "firstName",

@@ -41,7 +41,7 @@ VALUES
 	('Financial Management'),
 	('Financial Analysts'),
 	('Accounting'),
-	('Sales');
+	('Investment');
 
 INSERT INTO role
 	(title, salary, department_id)
